@@ -27,10 +27,10 @@ export default function TabelaMoedas(): JSX.Element {
   // Função assíncrona para buscar os dados
   async function getData(): Promise<ApiResponse> {
     const res = await fetch(
-      "https://economia.awesomeapi.com.br/json/last/USD-BRL,EUR-BRL,BTC-BRL"
+      "https://economia.awesomeapi.com.br/json/last/USD-BRL,BRL-USD,EUR-BRL,BRL-EUR,BTC-BRL,USD-EUR,EUR-USD,JPY-BRL,BRL-JPY,USD-JPY"
     );
-    // Faz o parse da resposta JSON e tipa como ApiResponse
     const json: ApiResponse = await res.json();
+    console.log(json);
     return json;
   }
 
