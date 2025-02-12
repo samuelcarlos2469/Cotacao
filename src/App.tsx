@@ -25,7 +25,6 @@ export default function App(): JSX.Element {
 
   // Função que faz a busca na API e atualiza o histórico
   const handleSearch = async (pair: string) => {
-    // Formata o par para o padrão que a API espera: substitui "/" por "-" (ex: "USD/BRL" -> "USD-BRL")
     const formattedPair = pair.includes("/") ? pair.replace("/", "-") : pair;
 
     try {

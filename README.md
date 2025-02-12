@@ -1,50 +1,82 @@
-# React + TypeScript + Vite
+# Documentação do Projeto de Cotação
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Descrição
 
-Currently, two official plugins are available:
+Este projeto é um frontend desenvolvido em React para realizar cotação de moedas. A aplicação permite que os usuários consultem valores de pares de moedas e armazenem um histórico de pesquisas, utilizando a API "AwesomeAPI" para obter os dados atualizados.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Tecnologias Utilizadas
 
-## Expanding the ESLint configuration
+- **React** com **Vite** para um ambiente de desenvolvimento rápido e eficiente
+- **TypeScript** para tipagem segura e melhor manutenção do código
+- **Tailwind CSS** para estilização moderna e responsiva
+- **useState** para gerenciamento de estado local
+- **Consumo de API** para obter dados dinâmicos sobre cotações
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Funcionalidades
 
-- Configure the top-level `parserOptions` property like this:
+- **Busca de Cotação de Moedas:** Permite ao usuário pesquisar pares de moedas e visualizar suas cotações em tempo real
+- **Histórico de Pesquisas:** Armazena as últimas pesquisas realizadas pelo usuário
+- **Top 10 Pares de Moedas:** Exibe os 10 pares de moedas mais populares
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## Estrutura do Projeto
+
+```
+/cotacao-app
+├── src
+│   ├── components # Componentes reutilizáveis (TabelaMoedas, HistoricoPesquisas, etc.)
+│   ├── style     # Arquivos CSS globais
+├── assets
+│   ├── App.tsx       # Componente principal
+│   ├── main.tsx      # Ponto de entrada da aplicação
+├── .gitignore
+├── package.json
+├── tsconfig.json
+└── README.md
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+## API Utilizada
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+A aplicação consome dados da **[AwesomeAPI](https://economia.awesomeapi.com.br/json/last/)** para obter informações sobre cotações de pares de moedas.
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+### Exemplo de Consumo de API
+
+```typescript
+const handleSearch = async (pair: string) => {
+  const formattedPair = pair.includes("/") ? pair.replace("/", "-") : pair;
+
+  try {
+    const response = await fetch(
+      `https://economia.awesomeapi.com.br/json/last/${formattedPair}`
+    );
+    const data = await response.json();
+
+    const key = formattedPair.replace("-", "");
+    const currency = data[key];
+
+    if (!currency) {
+      throw new Error("Dados não encontrados para o par informado.");
+    }
+
+    const newEntry = {
+      id: Date.now(),
+      pair: formattedPair,
+      currency: {
+        name: currency.name,
+        bid: currency.bid,
+        ask: currency.ask,
+      },
+      timestamp: new Date().toLocaleString(),
+    };
+
+    setHistory((prevHistory) => [...prevHistory, newEntry]);
+  } catch (error) {
+    console.error("Erro ao buscar dados:", error);
+  }
+};
 ```
+
+## Deploy
+
+A aplicação será hospedada na **Vercel** ou **Netlify**, permitindo acesso rápido e fácil aos usuários.
+
+##

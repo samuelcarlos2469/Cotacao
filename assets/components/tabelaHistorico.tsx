@@ -1,5 +1,4 @@
 import React from "react";
-import { SearchEntry } from "../types"; // ou o caminho onde você definiu as interfaces
 
 interface Currency {
   name: string;
